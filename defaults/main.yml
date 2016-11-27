@@ -1,0 +1,6 @@
+---
+# defaults file for sa-vpn-softether
+
+role_dir: "{{role_path}}"
+
+softether_home: /opt/vpnserver

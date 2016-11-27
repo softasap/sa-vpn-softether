@@ -1,0 +1,73 @@
+---
+# tasks file for sa-vpn-softether
+
+- name: SoftEther | Ensure target directory exists
+  file: path="{{softether_home}}"
+  become: yes
+  tags:
+    - softether
+
+- name: SoftEther | Download distribution
+  get_url: url="http://www.softether-download.com/files/softether/v4.20-9608-rtm-2016.04.17-tree/Linux/SoftEther_VPN_Server/64bit_-_Intel_x64_or_AMD64/softether-vpnserver-v4.20-9608-rtm-2016.04.17-linux-x64-64bit.tar.gz" dest="/tmp/softether.tar.gz"
+
+- name: SoftEther | unarchive
+  unarchive: src=/tmp/softether.tar.gz  dest="{{softether_home}}"
+  become: yes
+  tags:
+    - softether
+
+- name: SoftEther | make
+  shell: yes 1 | make
+  args:
+    chdir: "{{softether_home}}"
+  tags:
+    - softether
+
+
+- name: SoftEther | configure lang.config
+  lineinfile:  dest="{{softether_home}}/vpnserver/lang.config" regexp=^(en|ja|cn)$  line={{ softether_lang }}
+  become: yes
+  tags:
+    - softether
+
+- name: SoftEther | install init script
+  template: src="{{role_dir}}/templates/startup/vpnserver.init.j2"  dest=/etc/init.d/vpnserver  mode=0755
+  become: yes
+  tags:
+    - softether
+
+
+- name: SoftEther | Enable service
+  service: name="vpnserver" enabled=yes  state=started
+  become: yes
+  tags:
+    - softether
+
+
+- name: SoftEther | Checking vpn installation by pressing 3
+  expect:
+    command: ./vpncmd
+    responses:
+        '^Select 1, 2 or 3:': '3\ncheck\nquit\n'
+        '^Password:': 'root\n'
+    echo: yes
+    chdir: "{{softether_home}}"
+  become: yes
+  tags:
+    - softether
+
+
+# - name: SoftEther | Configure vpn server by pressing 1
+#   expect:
+#     command: ./vpncmd
+#     responses:
+#         '^Select 1, 2 or 3:': '1\n'
+#         '^Hostname of IP Address of Destination:': '\n'
+#         '^Specify Virtual Hub Name:': '\n'
+#         '^Password:': 'root\n'
+#         '^Confirm input:': 'root\n'
+#     echo: yes
+#     chdir: "{{softether_home}}"
+#   become: yes
+#   tags:
+#     - softether
