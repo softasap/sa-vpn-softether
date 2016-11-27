@@ -1,9 +1,17 @@
 ---
 # tasks file for sa-vpn-softether
 
+- name: SoftEther | Check vpnserver presence
+  command: test -x {{softether_home}}/vpnserver
+  ignore_errors: yes
+  register: vpnserver_present
+  tags:
+      -java
+
 - name: SoftEther | Ensure target directory exists
   file: path="{{softether_home}}"
   become: yes
+  when: vpnserver_present | failed
   tags:
     - softether
 
@@ -12,12 +20,14 @@
 
 - name: SoftEther | unarchive
   unarchive: src=/tmp/softether.tar.gz  dest="{{softether_home}}"
+  when: vpnserver_present | failed
   become: yes
   tags:
     - softether
 
 - name: SoftEther | make
   shell: yes 1 | make
+  when: vpnserver_present | failed
   args:
     chdir: "{{softether_home}}"
   tags:
@@ -26,12 +36,14 @@
 
 - name: SoftEther | configure lang.config
   lineinfile:  dest="{{softether_home}}/vpnserver/lang.config" regexp=^(en|ja|cn)$  line={{ softether_lang }}
+  when: vpnserver_present | failed
   become: yes
   tags:
     - softether
 
 - name: SoftEther | install init script
   template: src="{{role_dir}}/templates/startup/vpnserver.init.j2"  dest=/etc/init.d/vpnserver  mode=0755
+  when: vpnserver_present | failed
   become: yes
   tags:
     - softether

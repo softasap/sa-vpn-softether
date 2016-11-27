@@ -1,0 +1,21 @@
+---
+- hosts: www
+
+  vars:
+    - root_dir: ..
+
+
+  pre_tasks:
+    - debug: msg="Pre tasks section"
+
+  roles:
+     - {
+        role: "sa-vpn-softether",
+       }
+
+  tasks:
+
+    - debug: msg="Tasks section"
+
+
+

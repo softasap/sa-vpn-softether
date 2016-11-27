@@ -1,0 +1,4 @@
+[submodule "roles/sa-vpn-softether"]
+        path = roles/sa-vpn-softether
+        url = https://github.com/softasap/sa-vpn-softether.git
+
