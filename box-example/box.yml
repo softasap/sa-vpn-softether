@@ -11,6 +11,9 @@
   roles:
      - {
         role: "sa-vpn-softether",
+        option_install_expect_dev: true,
+        option_unattended_configuration: true
+
        }
 
   tasks:
