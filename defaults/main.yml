@@ -6,5 +6,6 @@ role_dir: "{{role_path}}"
 option_install_expect_dev: false
 option_unattended_configuration: false
 
-softether_home: /opt/vpnserver
+softether_location: /opt
+softether_home: "{{softether_location}}/vpnserver"
 softether_lang: en

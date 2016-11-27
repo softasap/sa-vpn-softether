@@ -1,6 +1,4 @@
 ---
-  - include: tasks_python.yml
-
   - include: tasks_expect.yml
 
   - include: tasks_softether.yml
