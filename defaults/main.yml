@@ -18,7 +18,7 @@ softether_fqdn: "{{ansible_host}}"
 
 # ============== IPSEC ===================
 softether_option_ipsec: true
-softether_ipsec_ltp: yes
+softether_ipsec_l2tp: yes
 softether_ipsec_l2tpraw: yes
 softether_ipsec_etherip: no
 softether_ipsec_presharedkey: "[1KH;+r-X#cvhpv7Y6=#;[{u"

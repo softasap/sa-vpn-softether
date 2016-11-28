@@ -1,3 +1,7 @@
+HubDelete vpn
+
+HubCreate vpn /PASSWORD:""
+
 hub vpn
 
 {% if softether_option_securenat %}
@@ -7,7 +11,7 @@ SecureNatDisable
 {% endif %}
 
 ServerCertRegenerate {{softether_fqdn}}
-ServerCertGet ~/cert.cer
+ServerCertGet ./generated/cert.cer
 
 SstpEnable yes
 
@@ -25,5 +29,5 @@ IPsecEnable /L2TP:{{softether_ipsec_l2tp}} /L2TPRAW:{{softether_ipsec_l2tpraw}} 
 
 {% if softether_option_openvpn %}
 OpenVpnEnable yes /PORTS:1194
-OpenVpnMakeConfig ~/openvpn_config.zip
+OpenVpnMakeConfig ./generated/openvpn_config.zip
 {% endif %}
