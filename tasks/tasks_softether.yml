@@ -97,24 +97,25 @@
   tags:
     - softether
 
-- name: SoftEther | Reset configuration (3/5)
-  service: name="vpnserver" enabled=yes  state=stopped
-  become: yes
-  tags:
-    - softether
-
-- name: SoftEther | Keys in sysctl.conf (4/5)
+- name: SoftEther | Keys in sysctl.conf (3/5)
   sysctl: name={{item.name}} value={{item.value}} ignoreerrors=yes state={{item.state | default('present')}}
   with_items: "{{ softether_sysctl_conf_lines | default()}}"
   become: yes
   tags:
     - softether
 
-- name: SoftEther | Reset configuration (5/5)
+- name: SoftEther | Reset configuration (4/5)
   shell: sysctl --system
   become: yes
   tags:
     - softether
+
+- name: SoftEther | Reset configuration (5/5)
+  service: name="vpnserver" enabled=yes  state=started
+  become: yes
+  tags:
+    - softether
+
 
 - name: SoftEther | Template unattended setup (builtin)
   template: src="{{role_dir}}/templates/scenarios/{{item}}" dest="{{softether_home}}/scenarios/{{item}}"
