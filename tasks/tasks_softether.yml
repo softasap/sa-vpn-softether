@@ -8,6 +8,17 @@
   tags:
       - softether
 
+
+- name: SoftEther | Install package dependencies
+  apt: pkg="{{item}}"
+  with_items:
+    - make
+    - libssl-dev
+  become: yes
+  when: vpnserver_present | failed
+  tags:
+    - softether
+
 - name: SoftEther | allow to reenter make process - reset folder
   file: path="{{softether_home}}" state="absent"
   become: yes
@@ -81,7 +92,7 @@
     - softether
 
 - name: SoftEther | Reset configuration (2/5)
-  file: path="{{softether_home}}/vpn_server_config" state="absent"
+  file: path="{{softether_home}}/vpn_server.config" state="absent"
   become: yes
   tags:
     - softether
@@ -106,7 +117,7 @@
     - softether
 
 - name: SoftEther | Template unattended setup (builtin)
-  template: src="{{role_dir}}/templates/scenarios/{{item}}" target="{{softether_home}}/scenarios/{{item}}"
+  template: src="{{role_dir}}/templates/scenarios/{{item}}" dest="{{softether_home}}/scenarios/{{item}}"
   with_items:
     - create_hub
     - check
@@ -123,9 +134,11 @@
     - softether
 
 - name: SoftEther | Proceed with setup
-  shell: ./vpncmd localhost /tools /IN:scenarios/create_hub
+  shell: ./vpncmd localhost /server /IN:scenarios/create_hub
   args:
     chdir: "{{softether_home}}"
   become: yes
   tags:
     - softether
+
+- debug: msg="Copy artifacts as scp {{ansible_ssh_user | default('youruser')}}@{{ansible_ssh_host | default('yourhost')}}:{{softether_home}}/generated/* ."
