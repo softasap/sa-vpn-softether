@@ -22,6 +22,21 @@
   tags:
     - softether
 
+- name: SoftEther | Ensure scenarios directory exists
+  file: path="{{softether_home}}/scenarios" state="directory"
+  become: yes
+  when: vpnserver_present | failed
+  tags:
+    - softether
+
+- name: SoftEther | Ensure scenarios directory exists
+  file: path="{{softether_home}}/generated" state="directory"
+  become: yes
+  when: vpnserver_present | failed
+  tags:
+    - softether
+
+
 - name: SoftEther | Download distribution
   get_url: url="http://www.softether-download.com/files/softether/v4.20-9608-rtm-2016.04.17-tree/Linux/SoftEther_VPN_Server/64bit_-_Intel_x64_or_AMD64/softether-vpnserver-v4.20-9608-rtm-2016.04.17-linux-x64-64bit.tar.gz" dest="/tmp/softether.tar.gz"
   become: yes
@@ -59,10 +74,58 @@
     - softether
 
 
-- name: SoftEther | Enable service
-  service: name="vpnserver" enabled=yes  state=started
+- name: SoftEther | Reset configuration (1/5)
+  service: name="vpnserver" enabled=yes  state=stopped
   become: yes
   tags:
     - softether
 
+- name: SoftEther | Reset configuration (2/5)
+  file: path="{{softether_home}}/vpn_server_config" state="absent"
+  become: yes
+  tags:
+    - softether
 
+- name: SoftEther | Reset configuration (3/5)
+  service: name="vpnserver" enabled=yes  state=stopped
+  become: yes
+  tags:
+    - softether
+
+- name: SoftEther | Keys in sysctl.conf (4/5)
+  sysctl: name={{item.name}} value={{item.value}} ignoreerrors=yes state={{item.state | default('present')}}
+  with_items: "{{ softether_sysctl_conf_lines | default()}}"
+  become: yes
+  tags:
+    - softether
+
+- name: SoftEther | Reset configuration (5/5)
+  shell: sysctl --system
+  become: yes
+  tags:
+    - softether
+
+- name: SoftEther | Template unattended setup (builtin)
+  template: src="{{role_dir}}/templates/scenarios/{{item}}" target="{{softether_home}}/scenarios/{{item}}"
+  with_items:
+    - create_hub
+    - check
+  become: yes
+  tags:
+    - softether
+
+- name: SoftEther | Check configuration
+  shell: ./vpncmd localhost /tools /IN:scenarios/check
+  args:
+    chdir: "{{softether_home}}"
+  become: yes
+  tags:
+    - softether
+
+- name: SoftEther | Proceed with setup
+  shell: ./vpncmd localhost /tools /IN:scenarios/create_hub
+  args:
+    chdir: "{{softether_home}}"
+  become: yes
+  tags:
+    - softether

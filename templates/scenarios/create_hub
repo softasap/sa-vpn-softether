@@ -1,0 +1,29 @@
+hub vpn
+
+{% if softether_option_securenat %}
+SecureNatEnable
+{% else %}
+SecureNatDisable
+{% endif %}
+
+ServerCertRegenerate {{softether_fqdn}}
+ServerCertGet ~/cert.cer
+
+SstpEnable yes
+
+BridgeCreate vpn /DEVICE:{{softether_bridge_device}} /TAP:{{softether_bridge_tap}}
+
+{% for vpnuser in softether_vpn_users %}
+UserCreate {{vpnuser.name}} /GROUP:none /REALNAME:none /NOTE:none
+UserPasswordSet {{vpnuser.name}} /PASSWORD:{{vpnuser.password}}
+{% endfor %}
+
+{% if softether_option_ipsec %}
+IPsecEnable /L2TP:{{softether_ipsec_l2tp}} /L2TPRAW:{{softether_ipsec_l2tpraw}} /ETHERIP:{{softether_ipsec_etherip}} /PSK:{{softether_ipsec_presharedkey}} /DEFAULTHUB:vpn
+{% endif %}
+
+
+{% if softether_option_openvpn %}
+OpenVpnEnable yes /PORTS:1194
+OpenVpnMakeConfig ~/openvpn_config.zip
+{% endif %}

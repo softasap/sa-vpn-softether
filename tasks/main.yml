@@ -1,4 +1,5 @@
 ---
-  - include: tasks_expect.yml
+
+  - include: use/__detect_init_system.yml
 
   - include: tasks_softether.yml

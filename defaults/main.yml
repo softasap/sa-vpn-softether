@@ -6,6 +6,49 @@ role_dir: "{{role_path}}"
 option_install_expect_dev: false
 option_unattended_configuration: false
 
+
+#SecureNAT is a combination of Virtual NAT and DHCP Server function. You can enable SecureNAT using the command below:
+softether_option_securenat: false
+
 softether_location: /opt
 softether_home: "{{softether_location}}/vpnserver"
 softether_lang: en
+softether_fqdn: "{{ansible_host}}"
+
+
+# ============== IPSEC ===================
+softether_option_ipsec: true
+softether_ipsec_ltp: yes
+softether_ipsec_l2tpraw: yes
+softether_ipsec_etherip: no
+softether_ipsec_presharedkey: "[1KH;+r-X#cvhpv7Y6=#;[{u"
+# /============== IPSEC ===================
+
+
+# ============== OPENVPN ===================
+softether_option_openvpn: true
+softether_openvpn_port: 1194
+softether_openvpn_config: "{{softether_home}}/generated/openvpn_config.zip"
+# /============== OPENVPN ===================
+
+
+
+# ============== Bridge ===================
+softether_bridge_device: soft
+softether_bridge_tap: no
+# ============== /Bridge ===================
+
+
+# ============== Users ===================
+softether_vpn_users:
+  - {
+      name: "vpn",
+      password: "verysecurepasswordyeah"
+    }
+# ============== /Users ===================
+
+softether_sysctl_conf_lines:
+  - {
+      name: 'net.ipv4.ip_forward',
+      value: '1'
+    }
