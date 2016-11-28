@@ -5,7 +5,8 @@ role_dir: "{{role_path}}"
 
 
 #SecureNAT is a combination of Virtual NAT and DHCP Server function. You can enable SecureNAT using the command below:
-softether_option_securenat: false
+softether_option_securenat: true
+softether_option_bridge: false
 
 softether_location: /opt
 softether_home: "{{softether_location}}/vpnserver"
@@ -39,8 +40,8 @@ softether_bridge_tap: no
 # ============== Users ===================
 softether_vpn_users:
   - {
-      name: "vpn",
-      password: "verysecurepasswordyeah"
+      name: "test",
+      password: "test"
     }
 # ============== /Users ===================
 

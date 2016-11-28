@@ -13,14 +13,17 @@ SecureNatDisable
 ServerCertRegenerate {{softether_fqdn}}
 ServerCertGet ./generated/cert.cer
 
-SstpEnable yes
 
+{% if softether_option_bridge %}
 BridgeCreate vpn /DEVICE:{{softether_bridge_device}} /TAP:{{softether_bridge_tap}}
+{% endif %}
 
 {% for vpnuser in softether_vpn_users %}
 UserCreate {{vpnuser.name}} /GROUP:none /REALNAME:none /NOTE:none
 UserPasswordSet {{vpnuser.name}} /PASSWORD:{{vpnuser.password}}
 {% endfor %}
+
+SstpEnable yes
 
 {% if softether_option_ipsec %}
 IPsecEnable /L2TP:{{softether_ipsec_l2tp}} /L2TPRAW:{{softether_ipsec_l2tpraw}} /ETHERIP:{{softether_ipsec_etherip}} /PSK:{{softether_ipsec_presharedkey}} /DEFAULTHUB:vpn
