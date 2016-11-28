@@ -3,9 +3,6 @@
 
 role_dir: "{{role_path}}"
 
-option_install_expect_dev: false
-option_unattended_configuration: false
-
 
 #SecureNAT is a combination of Virtual NAT and DHCP Server function. You can enable SecureNAT using the command below:
 softether_option_securenat: false
