@@ -6,8 +6,54 @@ sa-vpn-softether
 
 Example of use: check box-example
 
-Configuration:
+Possible configuration:
 ```YAML
+
+softether_option_securenat: true
+softether_option_bridge: false
+
+softether_location: /opt
+softether_home: "{{softether_location}}/vpnserver"
+softether_lang: en
+softether_fqdn: "{{ansible_host}}"
+
+
+# ============== IPSEC ===================
+softether_option_ipsec: true
+softether_ipsec_l2tp: yes
+softether_ipsec_l2tpraw: yes
+softether_ipsec_etherip: no
+softether_ipsec_presharedkey: "zzz"
+# /============== IPSEC ===================
+
+
+# ============== OPENVPN ===================
+softether_option_openvpn: true
+softether_openvpn_port: 1194
+softether_openvpn_config: "{{softether_home}}/generated/openvpn_config.zip"
+# /============== OPENVPN ===================
+
+
+
+# ============== Bridge ===================
+softether_bridge_device: soft
+softether_bridge_tap: no
+# ============== /Bridge ===================
+
+
+# ============== Users ===================
+softether_vpn_users:
+  - {
+      name: "test",
+      password: "test"
+    }
+# ============== /Users ===================
+
+softether_sysctl_conf_lines:
+  - {
+      name: 'net.ipv4.ip_forward',
+      value: '1'
+    }
 
 ```
 
@@ -15,9 +61,21 @@ Simple:
 
 ```YAML
 
+vars:
+     - my_softether_vpn_users:
+        - {
+            name: "my_user",
+            password: "my_password"
+          }
+
+     - my_softether_ipsec_presharedkey: "[1KH;+r-X#cvhpv7Y6=#;[{u"
+
+roles:
 
      - {
-         role: "sa-vpn-softether"
+         role: "sa-vpn-softether",
+         softether_vpn_users: "{{my_softether_vpn_users}}",
+         softether_ipsec_presharedkey: "{{my_softether_ipsec_presharedkey}}"
        }
 
 ```
@@ -27,11 +85,57 @@ Advanced:
 
 ```YAML
 
+vars:
+     - my_softether_vpn_users:
+        - {
+            name: "my_user",
+            password: "my_password"
+          }
 
+     - my_softether_ipsec_presharedkey: "[1KH;+r-X#cvhpv7Y6=#;[{u"
+
+roles:
      - {
-         role: "sa-vpn-softether"
+         role: "sa-vpn-softether",
+
+         softether_vpn_users: "{{my_softether_vpn_users}}",
+         softether_ipsec_presharedkey: "{{my_softether_ipsec_presharedkey}}"
+
+
+         softether_option_securenat: true,
+         softether_option_bridge: false,
+         softether_fqdn: "{{ansible_host}}",
+
+
+         # ============== IPSEC ===================
+         softether_option_ipsec: true,
+         softether_ipsec_l2tp: yes,
+         softether_ipsec_l2tpraw: yes,
+         softether_ipsec_etherip: no,
+         # /============== IPSEC ===================
+
+
+         # ============== OPENVPN ===================
+         softether_option_openvpn: true,
+         softether_openvpn_port: 1194,
+         softether_openvpn_config: "{{softether_home}}/generated/openvpn_config.zip",
+         # /============== OPENVPN ===================
+
+
+
+         # ============== Bridge ===================
+         softether_bridge_device: soft,
+         softether_bridge_tap: no
+         # ============== /Bridge ===================
+
        }
 
+```
+
+If you ever needed to setup vpnserver on your own on later stage:  
+
+```
+  softether_init_script: scenarios/dummy
 ```
 
 
@@ -49,14 +153,15 @@ sudo apt install network-manager-openvpn network-manager-openvpn-gnome network-m
 
 After logout/login or reboot you will have menu option "Import saved vpn configuration".
 
-Import file named `openvpn_remote_access_l3.ovpn`
+Import file named `yourhostname_l3.ovpn`
 
-use your user@vpn , for example `test@vpn` followed by password, like `test`
+use your `user@vpn` , for example `test@vpn` followed by password, like `test` ;
+If you have only one hub created, than you can use only username.
 
 
 To troubleshoot you might use interactive session native ovpn client, like
 
-`openvpn --config my.ovpn`
+`sudo openvpn --config my.ovpn`
 
 
 Connecting to OpenVPN full story

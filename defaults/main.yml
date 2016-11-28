@@ -50,3 +50,8 @@ softether_sysctl_conf_lines:
       name: 'net.ipv4.ip_forward',
       value: '1'
     }
+
+
+# =========== INIT SCENARIONS ===============
+
+softether_init_script: scenarios/create_hub

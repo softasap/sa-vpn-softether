@@ -135,11 +135,18 @@
     - softether
 
 - name: SoftEther | Proceed with setup
-  shell: ./vpncmd localhost /server /IN:scenarios/create_hub
+  shell: ./vpncmd localhost /server /IN:{{softether_init_script}}
   args:
     chdir: "{{softether_home}}"
   become: yes
   tags:
     - softether
+
+- name: SoftEther | Restart service
+  service: name="vpnserver" enabled=yes  state=started
+  become: yes
+  tags:
+    - softether
+
 
 - debug: msg="Copy artifacts as scp {{ansible_ssh_user | default('youruser')}}@{{ansible_ssh_host | default('yourhost')}}:{{softether_home}}/generated/* ."
