@@ -73,7 +73,7 @@
 
 
 - name: SoftEther | configure lang.config
-  lineinfile:  dest="{{softether_home}}/lang.config" regexp=^(en|ja|cn)$  line={{ softether_lang }}
+  lineinfile:  dest="{{softether_home}}/lang.config" regexp=^(en|ja|cn)$  line={{ softether_lang }} create=yes
   become: yes
   tags:
     - softether
