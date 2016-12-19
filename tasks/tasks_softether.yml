@@ -158,3 +158,10 @@
 
 
 - debug: msg="Copy artifacts as scp {{ansible_ssh_user | default('youruser')}}@{{ansible_ssh_host | default('yourhost')}}:{{softether_home}}/generated/* ."
+
+- name: Download SoftEther Artifacts
+  synchronize: mode=pull src="{{softether_home}}/generated" dest="{{playbook_dir}}/generated"
+  ignore_errors: yes
+  become: yes
+  tags:
+    - openvpn
