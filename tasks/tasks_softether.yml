@@ -13,6 +13,7 @@
   apt: pkg="{{item}}"
   with_items:
     - make
+    - gcc
     - libssl-dev
   become: yes
   when: vpnserver_present | failed
