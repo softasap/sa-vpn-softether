@@ -80,10 +80,17 @@
 
 - name: SoftEther | install init script
   template: src="{{role_dir}}/templates/startup/vpnserver.init.j2"  dest=/etc/init.d/vpnserver  mode=0755
+  when: upstart_system == "upstart"
   become: yes
   tags:
     - softether
 
+- name: SoftEther | install init script
+  template: src="{{role_dir}}/templates/startup/vpnserver.service.j2"  dest=/etc/systemd/system/vpnserver.service  mode=0755
+  when: upstart_system == "systemd"
+  become: yes
+  tags:
+    - softether
 
 - name: SoftEther | Reset configuration (1/5)
   service: name="vpnserver" enabled=yes  state=stopped
