@@ -18,6 +18,16 @@
   tags:
       - softether
 
+- name: SoftEther | Define package dependencies (RedHat Family)
+  set_fact:
+    packages:
+      - make
+      - gcc
+      - binutils
+  when: vpnserver_present | failed and ansible_os_family == "RedHat"
+  tags:
+      - softether
+
 - name: SoftEther | Install package dependencies
   package: pkg="{{item}}"
   with_items: "{{packages}}"
