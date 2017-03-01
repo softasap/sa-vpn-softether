@@ -131,6 +131,7 @@
 - name: SoftEther | Reset configuration (4/5)
   shell: sysctl --system
   become: yes
+  when: ansible_os_family == "Debian"
   tags:
     - softether
 
