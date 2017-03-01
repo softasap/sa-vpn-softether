@@ -1,4 +1,3 @@
-
 #!/bin/sh
 ALIAS_CMD="$(echo ""$0"" | sed -e 's?/sbin/??')"
 
