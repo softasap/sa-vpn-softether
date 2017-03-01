@@ -8,13 +8,29 @@
   tags:
       - softether
 
+- name: SoftEther | Define package dependencies (Debian Family)
+  set_fact:
+    packages:
+      - make
+      - gcc
+      - libssl-dev
+  when: vpnserver_present | failed and ansible_os_family == "Debian"
+  tags:
+      - softether
+
+- name: SoftEther | Define package dependencies (RedHat Family)
+  set_fact:
+    packages:
+      - make
+      - gcc
+      - binutils
+  when: vpnserver_present | failed and ansible_os_family == "RedHat"
+  tags:
+      - softether
 
 - name: SoftEther | Install package dependencies
-  apt: pkg="{{item}}"
-  with_items:
-    - make
-    - gcc
-    - libssl-dev
+  package: pkg="{{item}}"
+  with_items: "{{packages}}"
   become: yes
   when: vpnserver_present | failed
   tags:
@@ -115,6 +131,7 @@
 - name: SoftEther | Reset configuration (4/5)
   shell: sysctl --system
   become: yes
+  when: ansible_os_family == "Debian"
   tags:
     - softether
 
