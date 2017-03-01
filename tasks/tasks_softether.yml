@@ -10,7 +10,7 @@
 
 
 - name: SoftEther | Install package dependencies
-  apt: pkg="{{item}}"
+  package: pkg="{{item}}"
   with_items:
     - make
     - gcc
