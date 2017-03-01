@@ -8,13 +8,19 @@
   tags:
       - softether
 
+- name: SoftEther | Define package dependencies (Debian Family)
+  set_fact:
+    packages:
+      - make
+      - gcc
+      - libssl-dev
+  when: vpnserver_present | failed and ansible_os_family == "Debian"
+  tags:
+      - softether
 
 - name: SoftEther | Install package dependencies
   package: pkg="{{item}}"
-  with_items:
-    - make
-    - gcc
-    - libssl-dev
+  with_items: "{{packages}}"
   become: yes
   when: vpnserver_present | failed
   tags:
