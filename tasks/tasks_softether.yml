@@ -8,25 +8,33 @@
   tags:
       - softether
 
-- name: SoftEther | Define package dependencies (Debian Family)
-  set_fact:
-    packages:
-      - make
-      - gcc
-      - libssl-dev
-  when: vpnserver_present | failed and ansible_os_family == "Debian"
-  tags:
-      - softether
+- block:
 
-- name: SoftEther | Define package dependencies (RedHat Family)
-  set_fact:
-    packages:
-      - make
-      - gcc
-      - binutils
-  when: vpnserver_present | failed and ansible_os_family == "RedHat"
-  tags:
-      - softether
+  - name: SoftEther | Define package dependencies (Debian Family)
+    set_fact:
+      packages:
+        - make
+        - gcc
+        - libssl-dev
+    when: vpnserver_present | failed
+    tags:
+        - softether
+
+  when: ansible_os_family == "Debian"
+
+- block:
+
+  - name: SoftEther | Define package dependencies (RedHat Family)
+    set_fact:
+      packages:
+        - make
+        - gcc
+        - binutils
+    when: vpnserver_present | failed
+    tags:
+        - softether
+
+  when: ansible_os_family == "RedHat"
 
 - name: SoftEther | Install package dependencies
   package: pkg="{{item}}"
@@ -109,33 +117,26 @@
   tags:
     - softether
 
-- name: SoftEther | Reset configuration (1/5)
+- name: SoftEther | Reset configuration (1/4)
   service: name="vpnserver" enabled=yes  state=stopped
   become: yes
   tags:
     - softether
 
-- name: SoftEther | Reset configuration (2/5)
+- name: SoftEther | Reset configuration (2/4)
   file: path="{{softether_home}}/vpn_server.config" state="absent"
   become: yes
   tags:
     - softether
 
-- name: SoftEther | Keys in sysctl.conf (3/5)
-  sysctl: name={{item.name}} value={{item.value}} ignoreerrors=yes state={{item.state | default('present')}}
+- name: SoftEther | Keys in sysctl.conf (3/4)
+  sysctl: name={{item.name}} value={{item.value}} ignoreerrors=yes state={{item.state | default('present')}} reload="yes"
   with_items: "{{ softether_sysctl_conf_lines | default()}}"
   become: yes
   tags:
     - softether
 
-- name: SoftEther | Reset configuration (4/5)
-  shell: sysctl --system
-  become: yes
-  when: ansible_os_family == "Debian"
-  tags:
-    - softether
-
-- name: SoftEther | Reset configuration (5/5)
+- name: SoftEther | Reset configuration (4/4)
   service: name="vpnserver" enabled=yes  state=started
   become: yes
   tags:
@@ -182,15 +183,3 @@
   become: yes
   tags:
     - openvpn
-
-- name: SoftEther | Add {{softether_home}} to path
-  lineinfile:
-    dest: /etc/profile.d/softether.sh
-    state: present
-    create: yes
-    regexp: '^export PATH'
-    line: 'export PATH=$PATH:{{softether_home}}'
-  become: yes
-  when: option_add_to_path
-  tags:
-    - softether

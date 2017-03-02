@@ -1,7 +1,30 @@
 ---
 - hosts: all
+
+  pre_tasks:
+
+    - name: TRAVIS TEST | Ensure multiverse repo is enabled
+      apt_repository:
+        repo: "{{item}}"
+        update_cache: false
+      register: multiverse_installed
+      when: ansible_distribution == 'Ubuntu'
+      sudo: yes
+      with_items:
+        - 'deb http://archive.ubuntu.com/ubuntu {{ansible_distribution_release}} multiverse'
+        - 'deb-src http://archive.ubuntu.com/ubuntu {{ansible_distribution_release}} multiverse'
+        - 'deb http://archive.ubuntu.com/ubuntu {{ansible_distribution_release}}-updates multiverse'
+        - 'deb-src http://archive.ubuntu.com/ubuntu {{ansible_distribution_release}}-updates multiverse'
+
+    - apt:
+        update_cache: true
+      when: multiverse_installed | changed
+      sudo: yes
+
   roles:
     - {
         role: "role_under_test",
+        extra_extension_params: "--user-data-dir /home/root/.code-root-user-data", 
         docker_test: true
       }
+

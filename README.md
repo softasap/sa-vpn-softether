@@ -139,6 +139,29 @@ If you ever needed to setup vpnserver on your own on later stage:
 ```
 
 
+Usage with ansible galaxy workflow
+----------------------------------
+
+If you installed the sa-vpn-softether role using the command
+
+
+`
+   ansible-galaxy install softasap.sa-vpn-softether
+`
+
+the role will be available in the folder library/softasap.sa-vpn-softether
+Please adjust the path accordingly.
+
+```YAML
+
+     - {
+         role: "softasap.sa-vpn-softether"
+       }
+
+```
+
+
+
 Connecting to OpenVPN from client box
 =====================================
 
@@ -254,8 +277,6 @@ relayed by the proxy-server. Specify it on the configuration file.
 
 Copyright and license
 ---------------------
-
-Copyright - Vyacheslav Voronenko
 
 Code licensed under the [BSD 3 clause] (https://opensource.org/licenses/BSD-3-Clause) or the [MIT License] (http://opensource.org/licenses/MIT).
 
