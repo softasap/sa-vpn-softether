@@ -3,6 +3,8 @@
 
 role_dir: "{{role_path}}"
 
+# set true to add {{softether_home}} to PATH env via /etc/profile.d/softether.sh
+option_add_to_path: false
 
 #SecureNAT is a combination of Virtual NAT and DHCP Server function. You can enable SecureNAT using the command below:
 softether_option_securenat: true

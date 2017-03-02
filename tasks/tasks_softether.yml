@@ -182,3 +182,15 @@
   become: yes
   tags:
     - openvpn
+
+- name: SoftEther | Add {{softether_home}} to path
+  lineinfile:
+    dest: /etc/profile.d/softether.sh
+    state: present
+    create: yes
+    regexp: '^export PATH'
+    line: 'export PATH=$PATH:{{softether_home}}'
+  become: yes
+  when: option_add_to_path
+  tags:
+    - softether
