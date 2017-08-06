@@ -16,7 +16,6 @@
         - make
         - gcc
         - libssl-dev
-    when: vpnserver_present | failed
     tags:
         - softether
 
@@ -30,7 +29,6 @@
         - make
         - gcc
         - binutils
-    when: vpnserver_present | failed
     tags:
         - softether
 
@@ -40,7 +38,6 @@
   package: pkg="{{item}}"
   with_items: "{{packages}}"
   become: yes
-  when: vpnserver_present | failed
   tags:
     - softether
 
@@ -54,21 +51,18 @@
 - name: SoftEther | Ensure target directory exists
   file: path="{{softether_home}}" state="directory"
   become: yes
-  when: vpnserver_present | failed
   tags:
     - softether
 
 - name: SoftEther | Ensure scenarios directory exists
   file: path="{{softether_home}}/scenarios" state="directory"
   become: yes
-  when: vpnserver_present | failed
   tags:
     - softether
 
 - name: SoftEther | Ensure scenarios directory exists
   file: path="{{softether_home}}/generated" state="directory"
   become: yes
-  when: vpnserver_present | failed
   tags:
     - softether
 
