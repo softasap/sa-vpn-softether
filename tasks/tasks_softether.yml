@@ -16,7 +16,7 @@
         - make
         - gcc
         - libssl-dev
-    when: vpnserver_present | failed
+    when: vpnserver_present is failed
     tags:
         - softether
 
@@ -30,7 +30,7 @@
         - make
         - gcc
         - binutils
-    when: vpnserver_present | failed
+    when: vpnserver_present is failed
     tags:
         - softether
 
@@ -40,35 +40,35 @@
   package: pkg="{{item}}"
   with_items: "{{packages}}"
   become: yes
-  when: vpnserver_present | failed
+  when: vpnserver_present is failed
   tags:
     - softether
 
 - name: SoftEther | allow to reenter make process - reset folder
   file: path="{{softether_home}}" state="absent"
   become: yes
-  when: vpnserver_present | failed
+  when: vpnserver_present is failed
   tags:
     - softether
 
 - name: SoftEther | Ensure target directory exists
   file: path="{{softether_home}}" state="directory"
   become: yes
-  when: vpnserver_present | failed
+  when: vpnserver_present is failed
   tags:
     - softether
 
 - name: SoftEther | Ensure scenarios directory exists
   file: path="{{softether_home}}/scenarios" state="directory"
   become: yes
-  when: vpnserver_present | failed
+  when: vpnserver_present is failed
   tags:
     - softether
 
 - name: SoftEther | Ensure scenarios directory exists
   file: path="{{softether_home}}/generated" state="directory"
   become: yes
-  when: vpnserver_present | failed
+  when: vpnserver_present is failed
   tags:
     - softether
 
@@ -83,14 +83,14 @@
 - name: SoftEther | unarchive
 #  shell: "tar -xzf /tmp/softether.tar.gz -C {{softether_home}}"
   unarchive: src="/tmp/softether.tar.gz" dest="{{softether_location}}" remote_src=yes
-  when: vpnserver_present | failed
+  when: vpnserver_present is failed
   become: yes
   tags:
     - softether
 
 - name: SoftEther | make
   shell: yes 1 | make
-  when: vpnserver_present | failed
+  when: vpnserver_present is failed
   args:
     chdir: "{{softether_home}}"
   tags:

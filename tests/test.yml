@@ -9,7 +9,7 @@
         update_cache: false
       register: multiverse_installed
       when: ansible_distribution == 'Ubuntu'
-      sudo: yes
+      become: yes
       with_items:
         - 'deb http://archive.ubuntu.com/ubuntu {{ansible_distribution_release}} multiverse'
         - 'deb-src http://archive.ubuntu.com/ubuntu {{ansible_distribution_release}} multiverse'
@@ -19,7 +19,7 @@
     - apt:
         update_cache: true
       when: multiverse_installed | changed
-      sudo: yes
+      become: yes
 
   roles:
     - {
