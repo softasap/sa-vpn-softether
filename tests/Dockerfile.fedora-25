@@ -1,6 +1,8 @@
 
 FROM fedora:25
 
+ENV container docker
+
 # Install Ansible
 RUN dnf -y update
 RUN dnf install -y python2 python2-dnf libselinux-python

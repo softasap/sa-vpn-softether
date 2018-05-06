@@ -1,5 +1,8 @@
 
 FROM ubuntu:14.04
+
+ENV container docker
+
 RUN apt-get update
 
 # Install Ansible
