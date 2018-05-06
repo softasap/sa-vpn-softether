@@ -29,7 +29,7 @@ env:
     playbook='test.yml'
   - distribution='centos'
     version='6'
-    init='/usr/lib/systemd/systemd'
+    init='/sbin/init'
     run_opts='--privileged'
     playbook='test.yml'
 #  - distribution: alpine
