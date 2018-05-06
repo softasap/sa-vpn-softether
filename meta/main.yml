@@ -25,6 +25,7 @@ galaxy_info:
       versions:
         - trusty
         - xenial 
+        - bionic
     - name: Fedora
       versions:
         - 25

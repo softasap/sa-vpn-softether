@@ -30,6 +30,7 @@
         - make
         - gcc
         - binutils
+        - which
     when: vpnserver_present is failed
     tags:
         - softether
