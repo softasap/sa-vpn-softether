@@ -133,6 +133,7 @@
 - name: SoftEther | Keys in sysctl.conf (3/4)
   sysctl: name={{item.name}} value={{item.value}} ignoreerrors=yes state={{item.state | default('present')}} reload="yes"
   with_items: "{{ softether_sysctl_conf_lines | default()}}"
+  when: docker_test is not defined
   become: yes
   tags:
     - softether
