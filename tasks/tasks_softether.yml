@@ -141,7 +141,6 @@
 - name: SoftEther | Reset configuration (4/4)
   service: name="vpnserver" enabled=yes  state=started
   become: yes
-  when: docker_test is not defined #TODO: check
   tags:
     - softether
 
