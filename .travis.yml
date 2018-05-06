@@ -20,7 +20,7 @@ env:
   - distribution='fedora'
     version='25'
     init='/usr/sbin/init'
-    run_opts=''
+    run_opts='--security-opt seccomp=unconfined --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro'
     playbook='test.yml'
   - distribution='centos'
     version='7'
@@ -71,13 +71,13 @@ script:
   # Test role.
   - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/${playbook}'
 
-  # Test role idempotence.
-  - >
-    sudo docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/roles/role_under_test/tests/${playbook}
-    | grep -q 'unreachable=0.*failed=0'
-    && (echo 'Idempotence test: pass' && exit 0)
-    || (echo 'Idempotence test: fail' && exit 1)
-
+#  # Test role idempotence.
+#  - >
+#    sudo docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/roles/role_under_test/tests/${playbook}
+#    | grep -q 'unreachable=0.*failed=0'
+#    && (echo 'Idempotence test: pass' && exit 0)
+#    || (echo 'Idempotence test: fail' && exit 1)
+#
   # Clean up
   - sudo docker stop "$(cat ${container_id})"
 
