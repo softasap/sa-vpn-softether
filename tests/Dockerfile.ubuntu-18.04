@@ -13,7 +13,7 @@ RUN find /etc/systemd/system \
 
 RUN apt-get update && \
     apt-get install -y \
-    dbus systemd && \
+    dbus systemd iproute2 sudo && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -33,7 +33,7 @@ RUN apt-get upgrade -y
 RUN apt-get install -y software-properties-common git python-dev wget apt-transport-https libffi-dev libssl-dev
 RUN apt-get install -y python-pip
 RUN pip install -U pip
-RUN pip install ansible
+RUN pip install ansible ansible-lint
 RUN mkdir -p /etc/ansible
 
 # setup tools 3.3 conflict

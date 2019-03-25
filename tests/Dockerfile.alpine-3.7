@@ -1,4 +1,4 @@
-FROM alpine:3.4
+FROM alpine:3.7
 
 ENV container docker
 
@@ -14,7 +14,7 @@ RUN echo "===> (temporary) Installing sudo ..."  && \
     \
     \
     echo "===> Installing Ansible..."  && \
-    pip install ansible ansible-lint    && \
+    pip install ansible ansible-lint   && \
     \
     \
     echo "===> Removing package list..."  && \
