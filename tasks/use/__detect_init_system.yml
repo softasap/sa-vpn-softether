@@ -9,7 +9,7 @@
     become: yes
     args:
       executable: /bin/bash
-    changed_when: False  
+    changed_when: False
     register: upstart_detect_raw
 
   - name: Set fact for upstart_system

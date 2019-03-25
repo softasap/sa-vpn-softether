@@ -185,6 +185,7 @@
   command: ./vpncmd localhost /server /IN:{{ softether_init_script }}
   args:
     chdir: "{{ softether_home }}"
+  when: docker_test is not defined
   become: yes
   tags:
     - softether
