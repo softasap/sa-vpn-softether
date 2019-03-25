@@ -77,7 +77,7 @@
 - name: SoftEther | Download distribution
   get_url:
     url: "https://github.com/SoftEtherVPN/SoftEtherVPN_Stable/releases/download/v{{ softether_version }}-rtm/softether-vpnserver-v4.29-9678-rtm-2019.02.28-linux-x64-64bit.tar.gz"
-    dest: "/tmp/softether.tar.gz"               
+    dest: "/tmp/softether.tar.gz"
   become: yes
   tags:
     - softether
@@ -142,7 +142,7 @@
     - softether
 
 - name: SoftEther | Keys in sysctl.conf (3/4)
-  sysctl: 
+  sysctl:
     name: "{{ item.name }}"
     value: "{{ item.value }}"
     ignoreerrors: yes
@@ -162,7 +162,7 @@
 
 
 - name: SoftEther | Template unattended setup (builtin)
-  template: 
+  template:
     src: "{{ role_dir }}/templates/scenarios/{{ item }}"
     dest: "{{ softether_home }}/scenarios/{{ item }}"
   with_items:
@@ -173,7 +173,7 @@
     - softether
 
 - name: SoftEther | Check configuration
-  shell: ./vpncmd localhost /tools /IN:scenarios/check
+  command: ./vpncmd localhost /tools /IN:scenarios/check
   args:
     chdir: "{{ softether_home }}"
   become: yes
@@ -181,7 +181,7 @@
     - softether
 
 - name: SoftEther | Proceed with setup
-  shell: ./vpncmd localhost /server /IN:{{ softether_init_script }}
+  command: ./vpncmd localhost /server /IN:{{ softether_init_script }}
   args:
     chdir: "{{ softether_home }}"
   become: yes

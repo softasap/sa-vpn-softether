@@ -9,7 +9,9 @@
     become: yes
     args:
       executable: /bin/bash
+    changed_when: False  
     register: upstart_detect_raw
 
-  - set_fact:
-      upstart_system: "{{upstart_detect_raw.stdout}}"
+  - name: Set fact for upstart_system
+    set_fact:
+      upstart_system: "{{ upstart_detect_raw.stdout }}"
