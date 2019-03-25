@@ -24,7 +24,8 @@ galaxy_info:
     - name: Ubuntu
       versions:
         - trusty
-        - xenial 
+        - xenial
+        - bionic
     - name: Fedora
       versions:
         - 25
@@ -36,11 +37,11 @@ galaxy_info:
   galaxy_tags:
     - softether
     - vpn
-    - L2TP
-    - IPsec
-    - OpenVPN 
-    - MS-SSTP
-    - L2TPv3
+    - l2tp
+    - ipsec
+    - openvpn
+    - msstp
+    - l2tpv3
     - server
     - ubuntu
   #platforms:

@@ -2,6 +2,11 @@
 - hosts: www
   gather_facts: False
 
+  vars:
+    - root_dir: "{{ playbook_dir }}"
+    - shared_dir: "{{ playbook_dir }}/../shared"
+
+
   pre_tasks:
     - debug: msg="Pre tasks section"
 
@@ -16,12 +21,19 @@
     - name: gather facts
       setup:
 
+#    - name: Include common pretasks
+#      include_tasks: "{{shared_dir}}/common_pretasks.yml"
+#      tags: always
+
 
   roles:
+
      - {
         role: "sa-vpn-softether"
        }
 
+
   tasks:
 
     - debug: msg="Tasks section"
+
