@@ -185,6 +185,7 @@
   command: ./vpncmd localhost /server /IN:{{ softether_init_script }}
   args:
     chdir: "{{ softether_home }}"
+    creates: /opt/vpnserver/generated/openvpn_config.zip
   when: docker_test is not defined
   become: yes
   tags:
