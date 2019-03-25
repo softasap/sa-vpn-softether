@@ -157,6 +157,7 @@
 - name: SoftEther | Reset configuration (4/4)
   service: name="vpnserver" enabled=yes  state=started
   become: yes
+  when: docker_test is not defined
   tags:
     - softether
 
@@ -191,6 +192,7 @@
 - name: SoftEther | Restart service
   service: name="vpnserver" enabled=yes  state=started
   become: yes
+  when: docker_test is not defined
   tags:
     - softether
 
@@ -200,6 +202,7 @@
   synchronize: mode=pull src="{{ softether_home }}/generated" dest="{{ playbook_dir }}/generated"
   ignore_errors: yes
   become: yes
+  when: docker_test is not defined
   tags:
     - openvpn
 
