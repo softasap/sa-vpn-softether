@@ -5,6 +5,7 @@
   command: test -x {{ softether_home }}/vpnserver
   ignore_errors: yes
   register: vpnserver_present
+  changed_when: false
   tags:
       - softether
 
@@ -81,6 +82,7 @@
   become: yes
   tags:
     - softether
+    - skip_ansible_lint
 
 - name: SoftEther | unarchive
 #  shell: "tar -xzf /tmp/softether.tar.gz -C {{softether_home}}"
@@ -97,6 +99,7 @@
     chdir: "{{ softether_home }}"
   tags:
     - softether
+    - skip_ansible_lint
 
 
 - name: SoftEther | configure lang.config
@@ -180,6 +183,7 @@
   become: yes
   tags:
     - softether
+    - skip_ansible_lint
 
 - name: SoftEther | Proceed with setup
   command: ./vpncmd localhost /server /IN:{{ softether_init_script }}
@@ -199,6 +203,8 @@
     - softether
 
 - debug: msg="Copy artifacts as scp {{ ansible_ssh_user | default('youruser') }}@{{ ansible_ssh_host | default('yourhost') }}:{{ softether_home }}/generated/* ."
+  tags:
+    - skip_ansible_lint
 
 - name: Download SoftEther Artifacts
   synchronize: mode=pull src="{{ softether_home }}/generated" dest="{{ playbook_dir }}/generated"
