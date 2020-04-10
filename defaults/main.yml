@@ -3,7 +3,9 @@
 
 role_dir: "{{role_path}}"
 
-softether_version: "4.29-9678"
+softether_version: "4.34-9745-beta"
+# dummy why would download link contain build date?
+softether_version_date: "2020.04.05" 
 
 # set true to add {{softether_home}} to PATH env via /etc/profile.d/softether.sh
 option_add_to_path: false
