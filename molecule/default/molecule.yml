@@ -6,8 +6,11 @@ dependency:
 scenario:
   name: default
 
-lint:
-  enabled: false  
+lint: |
+       set -e
+       yamllint .
+       ansible-lint
+       flake8  
 
 molecule:
   raw_ssh_args:
@@ -49,61 +52,74 @@ ansible:
   # ansiblecfg_defaults:
   #   retry_files_enabled: False
   # ansiblecfg_ssh_connection:
-  #   pipelining: True  
-  
-vagrant:
-  platforms:
+  #   pipelining: True
+
+platforms:
+  - name: bionic
+    provider_raw_config_args:
+      - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected' ]"
+    box: ubuntu/bionic64
+    memory: 4096
+    cpus: 2
+#    groups:
+#      - groupname
+
+    # optional - box is accesible from your real network
+#    interfaces:
+#      - network_name: private_network
+#        type: dhcp
+#        auto_config: true
+
+
+    # interfaces:
+    #   - auto_config: true
+    #     network_name: private_network
+    #     type: dhcp
+    #   - virtualbox__intnet: test_network
+    #     network_name: private_network
+    #     ip: 192.168.0.1
+    # provision: false
+
   # - name: trusty
   #   box: ubuntu/trusty64
   #   # interfaces:
   #   #   - network_name: public_network
   #   #     type: dhcp
-  #   #     auto_config: true    
+  #   #     auto_config: true
   # - name: xenial
   #   box: ubuntu/xenial64
-   - name: bionic
-     box: ubuntu/bionic64
+  # - name: bionic
+  #   box: ubuntu/bionic64
     # interfaces:
     #   - network_name: public_network
     #     type: dhcp
     #     auto_config: true
     # provider_raw_config_args:
-    # - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected' ]"    
+    # - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected' ]"
   # - name: centos6
-  #   box: centos/6    
+  #   box: centos/6
   #- name: centos7
   #  box: centos/7
+  #- name: centos8
+  #  box: centos/8
   # - name: fedora28
   #   box: generic/fedora28
   # - name: alpine
   #   box: generic/alpine28
-  providers:
-    - name: virtualbox
-      type: virtualbox
-      options:
-        memory: 1024
-        cpus: 2
-  instances:
-    - name: someinstance
-    - name: someinstance2
 
-# docker:
-#   containers:
-#   - name: someinstance
-#     image: softasap/someimage
-#     image_version: latest
-#     privileged: True
-#     ansible_groups:
-#     - some-hosts
-#   - name: someinstance-inactive
-#     image: softasap/someimage
-#     image_version: 7
-#     ansible_groups:
-#     - some-hosts
-
+provisioner:
+  name: ansible
+  config_options:
+    defaults:
+      callback_whitelist: profile_roles,profile_tasks,timer
+  # playbooks:
+  #   create: ../../../../../resources/playbooks/vagrant/create.yml
+  #   destroy: ../../../../../resources/playbooks/vagrant/destroy.yml
+  # env:
+  #   ANSIBLE_ROLES_PATH: ../../../../../resources/roles/
+  lint:
+    name: ansible-lint
 verifier:
   name: testinfra
   env:
-    PYTHONWARNINGS: "ignore:.*U.*mode is deprecated:DeprecationWarning"  
-  lint:
-    name: flake8  
+    PYTHONWARNINGS: "ignore:.*U.*mode is deprecated:DeprecationWarning"
