@@ -2,3 +2,6 @@ box-example/roles
 *.retry
 tempfile
 local*.sh
+.venv/
+generated/
+
